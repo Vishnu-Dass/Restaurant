@@ -7,7 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 
 
-
+import com.example.restaurant.ui.Note;
+import com.example.restaurant.ui.NoteAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.Query;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +28,7 @@ public class Main2Activity extends AppCompatActivity {
 
     private  FirebaseFirestore db = FirebaseFirestore.getInstance();
     private  CollectionReference notebookRef = db.collection("Restaurant");
-    private  MyAdapter adapter;
+    private NoteAdapter adapter;
 
 
     @Override
@@ -35,18 +37,24 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         setUpRecyclerView();
 
+
     }
     private  void setUpRecyclerView(){
 
 
         Query query = notebookRef.orderBy("title" , Query.Direction.DESCENDING);
-        FirestoreRecyclerOptions<Model> options = new  FirestoreRecyclerOptions.Builder<Model>()
-                .setQuery(query,Model.class)
+        FirestoreRecyclerOptions<Note> options = new  FirestoreRecyclerOptions.Builder<Note>()
+                .setQuery(query, Note.class)
+
                 .build();
-        adapter = new MyAdapter(options);
+
+        adapter = new NoteAdapter(options);
+
+
 
 
      RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
      recyclerView.setHasFixedSize(true);
      recyclerView.setLayoutManager(new LinearLayoutManager(this));
      recyclerView.setAdapter(adapter);
@@ -59,9 +67,6 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-
-
         adapter.startListening();
 
     }
